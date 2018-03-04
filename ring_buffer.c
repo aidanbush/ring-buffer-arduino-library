@@ -67,8 +67,8 @@ int insert_over_ring_buf(ring_buf_s *buf, void *new_elem) {
     return buf->len;
 }
 
-/* peak at the top element of the ring buffer */
-void *peak_ring_buf(ring_buf_s *buf) {
+/* peek at the top element of the ring buffer */
+void *peek_ring_buf(ring_buf_s *buf) {
     if (buf == NULL)
         return NULL;
 

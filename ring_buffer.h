@@ -45,10 +45,10 @@ int insert_wrap_ring_buf(ring_buf_s *buf, void *new_elem);
 int insert_over_ring_buf(ring_buf_s *buf, void *new_elem);
 
 /*
- * Peak at the top element of the ring buffer
+ * Peek at the top element of the ring buffer
  * returns that element or NULL if empty
  */
-void *peak_ring_buf(ring_buf_s *buf);
+void *peek_ring_buf(ring_buf_s *buf);
 
 /*
  * Pop the top element off the ring buffer
