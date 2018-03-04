@@ -1,3 +1,8 @@
+/* Author: Aidan Bush
+ * Date: Mar. 2, 2018
+ * File buffer.c
+ * Description: Main file for ring buffer.
+ */
 #include <stdint.h>
 #include <stdlib.h>
 

@@ -1,3 +1,8 @@
+/* Author: Aidan Bush
+ * Date: Mar. 2, 2018
+ * File test.c
+ * Description: ring buffer test file.
+ */
 #define RING_MAX_LEN 16
 
 #include <stdio.h>

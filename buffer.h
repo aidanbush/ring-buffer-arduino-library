@@ -1,3 +1,8 @@
+/* Author: Aidan Bush
+ * Date: Mar. 2, 2018
+ * File buffer.h
+ * Description: Header file for ring buffer.
+ */
 #ifndef BUFFER_H
 #define BUFFER_H
 
