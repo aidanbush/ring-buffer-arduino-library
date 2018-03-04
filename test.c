@@ -7,7 +7,7 @@
 #include <assert.h>
 #include <string.h>
 
-#include "buffer.h"
+#include "ring_buffer.h"
 
 void test_align() {
 #pragma GCC diagnostic push

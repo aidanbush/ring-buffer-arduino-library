@@ -8,9 +8,9 @@ CFLAGS=-Wall -Werror -Wextra -g -pedantic
 
 .PHONY: clean
 
-test: test.c buffer.o
+test: test.c ring_buffer.o
 
-buffer.o: buffer.c buffer.h
+ring_buffer.o: ring_buffer.c ring_buffer.h
 
 clean:
 	$(RM) test *.o

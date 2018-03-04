@@ -6,7 +6,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-#include "buffer.h"
+#include "ring_buffer.h"
 
 /* resets the ring buffer using the free function to free all elements */
 void reset_ring_buf(ring_buf_s *buf, void(*free_func)(const void *)) {
