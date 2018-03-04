@@ -1,0 +1,29 @@
+#######################################
+# Syntax Coloring Map For RingBuffer
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+ring_buf_s	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+reset_ring_buf	KEYWORD2
+insert_ring_buf	KEYWORD2
+insert_wrap_ring_buf	KEYWORD2
+insert_over_ring_buf	KEYWORD2
+peak_ring_buf	KEYWORD2
+pop_ring_buf	KEYWORD2
+apply_func_ring_buf	KEYWORD2
+align_ring_buf	KEYWORD2
+sort_ring_buf	KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+
+RING_MAX_LEN	LITERAL1
