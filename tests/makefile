@@ -13,4 +13,4 @@ test: test.c ring_buffer.o
 ring_buffer.o: ring_buffer.c ring_buffer.h
 
 clean:
-	$(RM) test *.o
+	$(RM) test *.o vgcore.*

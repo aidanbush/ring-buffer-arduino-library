@@ -8,8 +8,25 @@
 
 #include "ring_buffer.h"
 
+ring_buf_s *init_ring_buf(uint8_t size) {
+    ring_buf_s *buf = malloc(sizeof(ring_buf_s));
+    if (buf == NULL)
+        return NULL;
+
+    buf->ring = calloc(size, sizeof(void *));
+    if (buf->ring == NULL) {
+        free(buf);
+        return NULL;
+    }
+    buf->s_pos = 0;
+    buf->len = 0;
+    buf->size = size;
+
+    return buf;
+}
+
 /* resets the ring buffer using the free function to free all elements */
-void reset_ring_buf(ring_buf_s *buf, void(*free_func)(const void *)) {
+void free_ring_buf(ring_buf_s *buf, void(*free_func)(const void *)) {
     if (buf == NULL)
         return;
 
@@ -17,22 +34,28 @@ void reset_ring_buf(ring_buf_s *buf, void(*free_func)(const void *)) {
     buf->len = 0;
 
     if (free_func != NULL) {
-        for (int i = 0; i < RING_MAX_LEN; i++) {
+        for (int i = 0; i < buf->size; i++) {
             free_func(buf->ring[i]);
         }
     }
 
-    for (int i = 0; i < RING_MAX_LEN; i++) {
+    for (int i = 0; i < buf->size; i++) {
         buf->ring[i] = NULL;
     }
+
+    buf->s_pos = 0;
+    buf->len = 0;
+    buf->size = 0;
+    free(buf->ring);
+    free(buf);
 }
 
 /* add the given element to the ring buffer */
 int insert_ring_buf(ring_buf_s *buf, void *new_elem) {
-    if (buf == NULL || buf->len >= (RING_MAX_LEN))
+    if (buf == NULL || buf->len >= (buf->size))
         return 0;
 
-    int pos = (buf->s_pos + buf->len) % (RING_MAX_LEN);
+    int pos = (buf->s_pos + buf->len) % (buf->size);
     buf->ring[pos] = new_elem;
     return ++buf->len;
 }
@@ -42,10 +65,10 @@ int insert_wrap_ring_buf(ring_buf_s *buf, void *new_elem) {
     if (buf == NULL)
         return 0;
 
-    int pos = (buf->s_pos + buf->len) % (RING_MAX_LEN);
+    int pos = (buf->s_pos + buf->len) % (buf->size);
     buf->ring[pos] = new_elem;
 
-    if (buf->len < (RING_MAX_LEN))
+    if (buf->len < (buf->size))
         buf->len++;
     return buf->len;
 }
@@ -56,10 +79,10 @@ int insert_over_ring_buf(ring_buf_s *buf, void *new_elem) {
         return 0;
 
     int pos;
-    if (buf->len < (RING_MAX_LEN)) {
-        pos = (buf->s_pos + buf->len - 1) % (RING_MAX_LEN);
+    if (buf->len < (buf->size)) {
+        pos = (buf->s_pos + buf->len - 1) % (buf->size);
     } else {
-        pos = (buf->s_pos + buf->len) % (RING_MAX_LEN);
+        pos = (buf->s_pos + buf->len) % (buf->size);
         buf->len++;
     }
 
@@ -86,7 +109,7 @@ void *pop_ring_buf(ring_buf_s *buf) {
         return NULL;
 
     uint8_t pos = buf->s_pos++;
-    buf->s_pos %= (RING_MAX_LEN);
+    buf->s_pos %= (buf->size);
     buf->len--;
 
     return buf->ring[pos];
@@ -101,7 +124,7 @@ uint16_t apply_func_ring_buf(ring_buf_s *buf, uint16_t(func)(void **), uint16_t 
     int cur;
 
     for (int i = 0; i < buf->len; i++) {
-        cur = (buf->s_pos + i) % (RING_MAX_LEN);
+        cur = (buf->s_pos + i) % (buf->size);
 
         ret_tmp = func(&buf->ring[cur]);
         ret |= ret_tmp;
@@ -121,15 +144,15 @@ void align_ring_buf(ring_buf_s *buf) {
     int c = 0, off = 0;
     void *tmp;
 
-    while(c < (RING_MAX_LEN)) {
+    while(c < (buf->size)) {
         i = c;
         tmp = buf->ring[i];
-        i2 = (buf->s_pos + i) % (RING_MAX_LEN);
+        i2 = (buf->s_pos + i) % (buf->size);
 
         while (i2 != off) {
             buf->ring[i] = buf->ring[i2];
             i = i2;
-            i2 = (buf->s_pos + i) % (RING_MAX_LEN);
+            i2 = (buf->s_pos + i) % (buf->size);
 
             c++;
         }
