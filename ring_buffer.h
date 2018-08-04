@@ -6,25 +6,26 @@
 #ifndef BUFFER_H
 #define BUFFER_H
 
-#ifndef RING_MAX_LEN
-#define RING_MAX_LEN 16
-#endif /* RING_MAX_LEN */
-
 #include <stdint.h>
 
 typedef struct ring_buf_s {
     uint8_t s_pos;
     uint8_t len;
-    void *ring[RING_MAX_LEN];
+    uint8_t size;
+    void **ring;
 } ring_buf_s;
 
 /*
- * Resets the ring buffer using the free function to free all elements
- * sets the length and starting position to 0
- * calls the free_func on all elements in the ring unless they are NULL
- * after freeing each elements it sets them to NULL
+ * Initialized a ring buffer for the size provided setting all pointers to NULL.
+ * returns a pointer to the struct.
  */
-void reset_ring_buf(ring_buf_s *buf, void(*free_func)(const void *));
+ring_buf_s *init_ring_buf(uint8_t size);
+
+/*
+ * Frees the ring buffer and all elements in it using the free function provided
+ * on all non NULL elements.
+ */
+void free_ring_buf(ring_buf_s *buf, void(*free_func)(const void *));
 
 /*
  * Adds the given element to the ring buffer if there is space
