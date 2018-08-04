@@ -79,6 +79,27 @@ void test_align() {
     free_ring_buf(buf5, NULL);
 }
 
+void test_init() {
+    // size 0
+    // size int max?
+    // size 1
+    // random size
+}
+
+void test_insert() {}
+
+void test_wrap_insert() {}
+
+void test_over_insert() {}
+
+void test_peek() {}
+
+void test_pop() {}
+
+void test_func() {}
+
+void test_sort() {}
+
 int main() {
     test_align();
 

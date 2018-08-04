@@ -15,13 +15,15 @@ typedef struct ring_buf_s {
     void **ring;
 } ring_buf_s;
 
+/*
+ * Initialized a ring buffer for the size provided setting all pointers to NULL.
+ * returns a pointer to the struct.
+ */
 ring_buf_s *init_ring_buf(uint8_t size);
 
 /*
- * Resets the ring buffer using the free function to free all elements
- * sets the length and starting position to 0
- * calls the free_func on all elements in the ring unless they are NULL
- * after freeing each elements it sets them to NULL
+ * Frees the ring buffer and all elements in it using the free function provided
+ * on all non NULL elements.
  */
 void free_ring_buf(ring_buf_s *buf, void(*free_func)(const void *));
 

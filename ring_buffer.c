@@ -13,11 +13,15 @@ ring_buf_s *init_ring_buf(uint8_t size) {
     if (buf == NULL)
         return NULL;
 
-    buf->ring = calloc(size, sizeof(void *));
+    buf->ring = malloc(size * sizeof(void *));
     if (buf->ring == NULL) {
         free(buf);
         return NULL;
     }
+
+    for (int i = 0; i < size; i++)
+        buf->ring[i] = NULL;
+
     buf->s_pos = 0;
     buf->len = 0;
     buf->size = size;
