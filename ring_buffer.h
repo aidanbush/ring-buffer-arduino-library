@@ -29,7 +29,7 @@ void free_ring_buf(ring_buf_s *buf, void(*free_func)(const void *));
 
 /*
  * Adds the given element to the ring buffer if there is space
- * returns 0 on error and the new length on success
+ * returns 0 on error or if full and the new length on success
  */
 int insert_ring_buf(ring_buf_s *buf, void *new_elem);
 
