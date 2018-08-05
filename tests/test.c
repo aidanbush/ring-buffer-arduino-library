@@ -36,7 +36,7 @@ void test_init() {
 }
 
 void test_align() {
-//#pragma GCC diagnostic push
+#pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wint-conversion"
     ring_buf_s *buf1 = init_ring_buf(RING_TEST_LEN);
     buf1->s_pos = 0;
@@ -103,11 +103,107 @@ void test_align() {
     free_ring_buf(buf5, NULL);
 }
 
-void test_insert() {}
+void test_insert() {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wint-conversion"
+    // insert on NULL struct
+    ring_buf_s *buf1 = NULL;
 
-void test_wrap_insert() {}
+    // insert empty
+    ring_buf_s *buf2 = init_ring_buf(RING_TEST_LEN);
+    memcpy(buf2->ring, (void*[]){0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, RING_TEST_LEN * sizeof(void*));
 
-void test_over_insert() {}
+    // insert with item
+    ring_buf_s *buf3 = init_ring_buf(RING_TEST_LEN);
+    buf3->s_pos = 0;
+    buf3->len = 1;
+    memcpy(buf3->ring, (void*[]){0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, RING_TEST_LEN * sizeof(void*));
+
+    // insert force wrap
+    ring_buf_s *buf4 = init_ring_buf(RING_TEST_LEN);
+    buf4->s_pos = 15;
+    buf4->len = 1;
+    memcpy(buf4->ring, (void*[]){0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, RING_TEST_LEN * sizeof(void*));
+
+    // insert full
+    ring_buf_s *buf5 = init_ring_buf(RING_TEST_LEN);
+    buf5->s_pos = 0;
+    buf5->len = RING_TEST_LEN;
+    memcpy(buf5->ring, (void*[]){0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, RING_TEST_LEN * sizeof(void*));
+
+    void *sol2[] = {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+    void *sol3[] = {0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+    void *sol4[] = {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+    void *sol5[] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+#pragma GCC diagnostic pop
+
+    uint8_t sol1_res = 0;
+    uint8_t sol2_res = 1;
+    uint8_t sol3_res = 2;
+    uint8_t sol4_res = 2;
+    uint8_t sol5_res = 0;
+
+    uint8_t sol2_s_pos = 0;
+    uint8_t sol3_s_pos = 0;
+    uint8_t sol4_s_pos = 15;
+    uint8_t sol5_s_pos = 0;
+
+    uint8_t sol2_len = 1;
+    uint8_t sol3_len = 2;
+    uint8_t sol4_len = 2;
+    uint8_t sol5_len = RING_TEST_LEN;
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wint-conversion"
+    int ins1_ret = insert_ring_buf(buf1, 1);
+    int ins2_ret = insert_ring_buf(buf2, 1);
+    int ins3_ret = insert_ring_buf(buf3, 1);
+    int ins4_ret = insert_ring_buf(buf4, 1);
+    int ins5_ret = insert_ring_buf(buf5, 1);
+#pragma GCC diagnostic pop
+
+    assert(ins1_ret == sol1_res);
+    assert(ins2_ret == sol2_res);
+    assert(ins3_ret == sol3_res);
+    assert(ins4_ret == sol4_res);
+    assert(ins5_ret == sol5_res);
+
+    assert(memcmp(buf2->ring, sol2, RING_TEST_LEN * sizeof(void *)) == 0);
+    assert(memcmp(buf3->ring, sol3, RING_TEST_LEN * sizeof(void *)) == 0);
+    assert(memcmp(buf4->ring, sol4, RING_TEST_LEN * sizeof(void *)) == 0);
+    assert(memcmp(buf5->ring, sol5, RING_TEST_LEN * sizeof(void *)) == 0);
+
+    assert(buf2->s_pos == sol2_s_pos);
+    assert(buf3->s_pos == sol3_s_pos);
+    assert(buf4->s_pos == sol4_s_pos);
+    assert(buf5->s_pos == sol5_s_pos);
+
+    assert(buf2->len == sol2_len);
+    assert(buf3->len == sol3_len);
+    assert(buf4->len == sol4_len);
+    assert(buf5->len == sol5_len);
+
+    free_ring_buf(buf2, NULL);
+    free_ring_buf(buf3, NULL);
+    free_ring_buf(buf4, NULL);
+    free_ring_buf(buf5, NULL);
+}
+
+void test_wrap_insert() {
+    // insert on NULL struct
+    // insert empty
+    // insert with item
+    // insert with wrap
+    // insert full
+}
+
+void test_over_insert() {
+    // insert on NULL struct
+    // insert empty
+    // insert with item
+    // insert force wrap
+    // insert full
+}
 
 void test_peek() {}
 
@@ -120,6 +216,7 @@ void test_sort() {}
 int main() {
     test_init();
     test_align();
+    test_insert();
 
     return 0;
 }
