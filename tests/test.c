@@ -6,10 +6,34 @@
 #include <stdio.h>
 #include <assert.h>
 #include <string.h>
+#include <time.h>
+#include <stdlib.h>
+#include <limits.h>
+#include <stdint.h>
 
 #include "ring_buffer.h"
 
 #define RING_TEST_LEN 16
+
+void test_init() {
+    // size 0
+    ring_buf_s *buf1 = init_ring_buf(0);
+    free_ring_buf(buf1, NULL);
+
+    // size 1
+    ring_buf_s *buf2 = init_ring_buf(1);
+    free_ring_buf(buf2, NULL);
+
+    // max size
+    ring_buf_s *buf3 = init_ring_buf(UCHAR_MAX);
+    free_ring_buf(buf3, NULL);
+
+    // random size
+    srand(time(NULL));
+    uint8_t r = (uint8_t) rand();
+    ring_buf_s *buf4 = init_ring_buf(r);
+    free_ring_buf(buf4, NULL);
+}
 
 void test_align() {
 //#pragma GCC diagnostic push
@@ -79,13 +103,6 @@ void test_align() {
     free_ring_buf(buf5, NULL);
 }
 
-void test_init() {
-    // size 0
-    // size int max?
-    // size 1
-    // random size
-}
-
 void test_insert() {}
 
 void test_wrap_insert() {}
@@ -101,6 +118,7 @@ void test_func() {}
 void test_sort() {}
 
 int main() {
+    test_init();
     test_align();
 
     return 0;
